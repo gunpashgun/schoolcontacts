@@ -13,7 +13,7 @@
 
 1. Зайдите на https://vercel.com
 2. Нажмите **Add New Project**
-3. Импортируйте: `gunpashgun/schoolcontacts`
+3. Импортируйте: `AlgonovaTech/schoolcontacts`
 4. **Важно:** Установите **Root Directory** = `frontend`
 
 ### Шаг 2: Переменные окружения
