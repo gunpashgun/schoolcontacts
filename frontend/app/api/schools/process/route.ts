@@ -17,10 +17,12 @@ export async function POST(request: NextRequest) {
       const fileFormat = file.name.endsWith('.csv') ? 'csv' :
                         file.name.endsWith('.json') ? 'json' : 'text';
       
-      schools = InputParser.parse(fileContent, fileFormat);
+      const result = InputParser.parse(fileContent, fileFormat);
+      schools = result instanceof Promise ? await result : result;
     } else if (textInput) {
       // Handle text input
-      schools = InputParser.parse(textInput, format as any);
+      const result = InputParser.parse(textInput, format as any);
+      schools = result instanceof Promise ? await result : result;
     } else {
       return NextResponse.json(
         { error: 'No input provided' },
