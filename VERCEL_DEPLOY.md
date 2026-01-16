@@ -15,11 +15,12 @@
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://tzcdzyqhadczxsvvfdhg.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_mBHUGJABWYTE4PahfMcmSA_MOUETx-I
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6Y2R6eXFoYWRjenhzdnZmZGhnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODU4MzI0OCwiZXhwIjoyMDg0MTU5MjQ4fQ.9sLSEf4IdGz9rGLJe8eTxOFLG5vCsB2tL_XximDVDUk
 ```
 
-### API URL (после деплоя backend):
+### Опционально (если есть отдельный Python backend):
 ```
-NEXT_PUBLIC_API_URL=https://your-api-domain.com
+PYTHON_API_URL=https://your-python-api.com
 ```
 
 **Важно:** Для локальной разработки используйте `http://localhost:8000`, но для продакшена нужен реальный URL вашего FastAPI backend.
