@@ -1,21 +1,45 @@
 # 🇮🇩 Indonesia EdTech Lead Gen Engine
 
-**Automated lead enrichment tool for the Indonesian private school market.**
+**Full-stack automated lead enrichment tool for the Indonesian private school market.**
 
-Find Decision Makers (Yayasan Chairmen, School Directors, Principals) and their contact details (WhatsApp/Email) from Indonesian schools.
+Find Decision Makers (Yayasan Chairmen, School Directors, Principals) and their verified contact details (WhatsApp/Email) from Indonesian schools.
 
-## Features
+## 🚀 Features
 
-- 🔍 **Smart Search** - Targeted Google searches via Serper API
-- 🌐 **Web Scraping** - Crawl4AI optimized for LLM processing
-- 🤖 **AI Extraction** - Claude 3.5 Sonnet or GPT-4o-mini
-- 📊 **Indonesian Optimized** - Understands "Ketua Yayasan", "Kepala Sekolah", etc.
-- 💬 **WhatsApp Priority** - Extracts wa.me links and +62 numbers
-- 📁 **Export** - CSV and Excel output
+- ✅ **Contact Validation** - Verify WhatsApp numbers and email addresses
+- 🔍 **Smart Search** - Targeted Google searches via Serper API + DAPODIK portal
+- 🌐 **Web Scraping** - Crawl4AI optimized for LLM processing + Google Maps integration
+- 🤖 **AI Extraction** - Claude 3.5 Sonnet or GPT-4o-mini with persona-focused prompts
+- 📊 **Indonesian Optimized** - Understands "Ketua Yayasan", "Operator Sekolah", "Nomor HP", etc.
+- 💬 **WhatsApp Priority** - Extracts wa.me links and +62 numbers with verification
+- 📁 **Multi-format Export** - CSV, Excel, JSON output
+- 🎨 **Modern UI** - Next.js frontend with shadcn/ui (dark theme, violet color)
+- 📦 **Supabase Integration** - History tracking and data persistence
 
-## Quick Start
+## 🏗️ Architecture
 
-### 1. Setup Environment
+```
+schoolcontacts/
+├── api/                    # FastAPI backend
+│   ├── main.py            # FastAPI app
+│   ├── routes/            # API endpoints
+│   ├── services/          # Business logic
+│   └── database/          # Supabase client
+├── frontend/              # Next.js frontend
+│   ├── app/               # Pages
+│   ├── components/        # React components
+│   └── lib/               # Utilities
+├── validator.py           # Contact validation
+├── models.py              # Data models
+├── search.py              # Search logic
+├── scraper.py             # Web scraping
+├── extractor.py           # LLM extraction
+└── main.py                # CLI orchestrator
+```
+
+## 📦 Setup
+
+### Backend
 
 ```bash
 # Create virtual environment
@@ -25,191 +49,150 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Install Playwright browsers (for fallback scraping)
+# Install Playwright browsers
 playwright install chromium
-```
 
-### 2. Configure API Keys
-
-```bash
-# Copy example config
+# Configure environment
 cp env.example .env
-
 # Edit .env with your API keys
 ```
 
-**Required API Keys:**
+### Frontend
+
+```bash
+cd frontend
+npm install
+```
+
+### Supabase
+
+1. Create a Supabase project at https://supabase.com
+2. Run `supabase_schema.sql` in your Supabase SQL editor
+3. Add `SUPABASE_URL` and `SUPABASE_KEY` to `.env`
+
+## 🔑 Required API Keys
 
 | Service | Purpose | Get it at |
 |---------|---------|-----------|
 | Serper.dev | Google Search | https://serper.dev (2500 free) |
-| Anthropic | Claude LLM | https://console.anthropic.com |
-| OpenAI (alt) | GPT-4 LLM | https://platform.openai.com |
+| OpenRouter | LLM Access | https://openrouter.ai |
+| Supabase | Database | https://supabase.com (free tier) |
 
-### 3. Run
+## 🚀 Running
+
+### Backend API
 
 ```bash
-# Process priority schools (Surabaya - 5 schools)
+cd api
+uvicorn main:app --reload --port 8000
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+### CLI (Original)
+
+```bash
+# Process priority schools
 python main.py
 
 # Process all schools
 python main.py --all
-
-# Process single school
-python main.py --school "PPPK Petra"
-
-# Process by location
-python main.py --location Jakarta
-
-# Validate config
-python main.py --validate
 ```
 
-## Output
+## 📝 Input Formats
 
-Results are saved to `output/` folder:
+The system supports multiple input formats:
 
-- `leads_YYYYMMDD_HHMMSS.csv`
-- `leads_YYYYMMDD_HHMMSS.xlsx`
-
-### Output Columns
-
-| Column | Description |
-|--------|-------------|
-| School Name | Name of the school |
-| School Type | Private Christian, International, etc. |
-| Location | City/region |
-| Foundation Name | Yayasan name |
-| NPSN | National School ID (8 digits) |
-| Official Website | School website URL |
-| Official Email | General contact email |
-| WhatsApp Business | Primary WhatsApp number |
-| DM1-3 Name | Decision maker names |
-| DM1-3 Role | Roles (Ketua Yayasan, etc.) |
-| DM1-3 WhatsApp | Personal WhatsApp |
-| DM1-3 LinkedIn | LinkedIn profiles |
-| Data Quality | Score 0-100% |
-
-## CLI Options
-
+### Text Format
 ```
-usage: main.py [-h] [--all] [--priority] [--location LOCATION]
-               [--school SCHOOL] [--batch BATCH] [--offset OFFSET]
-               [--delay DELAY] [--output {csv,excel,both}] [--validate]
-
-Options:
-  --all                 Process all schools in database
-  --priority            Process priority schools only (default)
-  --location LOCATION   Filter by location (Jakarta, Surabaya, etc.)
-  --school SCHOOL       Process single school by name
-  --batch BATCH         Batch size (default: 5)
-  --offset OFFSET       Skip first N schools
-  --delay DELAY         Delay between schools in seconds (default: 3)
-  --output {csv,excel,both}  Output format (default: both)
-  --validate            Validate config and exit
+PPPK Petra - Private Christian (Elementary to High School, Education Board/Group)
+Yohanes Gabriel Foundation - Private Catholic (Elementary to High School, Religious Foundation)
 ```
 
-## Architecture
-
-```
-schoolcontacts/
-├── main.py           # CLI & orchestration
-├── config.py         # Configuration
-├── models.py         # Pydantic data models
-├── search.py         # Serper Google Search
-├── scraper.py        # Web scraping (Crawl4AI/Playwright)
-├── extractor.py      # LLM extraction (Claude/GPT)
-├── schools_data.py   # Target school database
-├── requirements.txt  # Dependencies
-├── env.example       # Environment template
-└── output/           # Export folder
+### CSV
+```csv
+name,type,location
+PPPK Petra,Private Christian,Surabaya
 ```
 
-## Indonesian-Specific Features
-
-### Role Keywords (Highest to Lowest Priority)
-
-1. **Ketua Yayasan** - Foundation Chairman (ultimate decision maker)
-2. **Pembina** - Patron/Supervisor
-3. **Direktur** - Director
-4. **Kepala Sekolah** - School Principal
-5. **Wakil Kepala** - Vice Principal
-6. **Bendahara** - Treasurer
-
-### Phone Number Handling
-
-- Detects `wa.me/62xxx` links
-- Detects `api.whatsapp.com` links
-- Normalizes `08xxx` → `+62xxx`
-- Recognizes landlines: `021` (Jakarta), `031` (Surabaya)
-
-### NPSN Integration
-
-- Extracts 8-digit National School ID
-- Can lookup in `sekolah.data.kemdikbud.go.id`
-
-## Target Schools
-
-### Priority (Week 1 - Surabaya)
-- PPPK Petra
-- Yohanes Gabriel Foundation
-- Santa Clara Catholic School
-- Gloria Christian School
-- Stella Maris School
-
-### Total Database: 50+ Schools
-- Jakarta B2B targets
-- National groups (BINUS, BPK Penabur, Tarakanita)
-- Regional schools (Semarang, Bali)
-
-## Rate Limiting
-
-Default settings (configurable in `.env`):
-
-- Serper API: 30 requests/minute
-- Scraping delay: 2 seconds/page
-- School delay: 3 seconds between schools
-
-## Troubleshooting
-
-### "SERPER_API_KEY not set"
-```bash
-cp env.example .env
-# Edit .env and add your Serper API key
+### JSON
+```json
+[
+  {"name": "PPPK Petra", "type": "Private Christian", "location": "Surabaya"}
+]
 ```
 
-### "Crawl4AI not installed"
-```bash
-pip install crawl4ai
-# Falls back to Playwright automatically
-```
+### Excel
+Upload Excel file with columns: name, type, location
 
-### "Playwright error"
-```bash
-playwright install chromium
-```
+## 🎯 New Features
 
-## Cost Estimation
+### Contact Validation
+- WhatsApp format validation
+- Email syntax + MX record + SMTP handshake
+- Personal vs general email classification
+- Verification status in exports
+
+### Enhanced Search
+- DAPODIK portal search for Operator Sekolah and Bendahara
+- Google Maps integration for up-to-date phone numbers
+- Instagram bio discovery for Linktree/Bio.fm links
+
+### Persona-Focused Extraction
+- Priority hierarchy: Ketua Yayasan → Operator Sekolah → Kepala Sekolah
+- "Nomor HP" and "WA" pattern detection
+- Direct contact extraction per person
+
+## 📊 Output
+
+Results include:
+- School information (NPSN, foundation, website)
+- Decision makers with verified contacts
+- Tech stack (LMS platforms detected)
+- Quality score (with verification bonus)
+- Source URLs for each contact
+
+## 🌐 Deployment
+
+### Vercel (Frontend)
+
+1. Connect your GitHub repository to Vercel
+2. Set environment variables:
+   - `NEXT_PUBLIC_API_URL` - Your FastAPI backend URL
+   - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anon key
+
+3. Deploy
+
+### Backend (Railway/Render/Fly.io)
+
+Deploy FastAPI backend separately and update `NEXT_PUBLIC_API_URL`.
+
+## 📈 Cost Estimation
 
 | Service | Free Tier | Per School (est.) |
 |---------|-----------|-------------------|
 | Serper | 2500 searches | ~5 searches |
-| Claude | Pay-as-you-go | ~$0.02 |
-| OpenAI | Pay-as-you-go | ~$0.01 |
+| Claude (OpenRouter) | Pay-as-you-go | ~$0.02 |
+| Supabase | 500MB database | Free for small projects |
 
 **Processing 50 schools ≈ $1-2 total**
 
-## License
+## 🔒 Security
+
+- Row Level Security (RLS) enabled in Supabase
+- Environment variables for sensitive keys
+- CORS configured for API
+
+## 📄 License
 
 MIT
-
-## Contributing
-
-1. Fork the repository
-2. Create feature branch
-3. Submit pull request
 
 ---
 
 Built for the Indonesian EdTech market 🇮🇩
-
