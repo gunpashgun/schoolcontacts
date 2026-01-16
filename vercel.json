@@ -5,7 +5,7 @@
   "framework": "nextjs",
   "rootDirectory": "frontend",
   "functions": {
-    "api/enrich.py": {
+    "../api/enrich.py": {
       "runtime": "python3.9"
     }
   }

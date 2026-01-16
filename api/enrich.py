@@ -1,15 +1,21 @@
 """
 Vercel Python Serverless Function for school enrichment
-This file is in the api/ directory for Vercel to recognize it as a serverless function
+Vercel automatically recognizes .py files in api/ directory as serverless functions
 """
 import json
 import sys
 import os
 from pathlib import Path
 
-# Add project root to path
+# Add project root to path to import Python modules
+# When deployed on Vercel, the working directory is the project root
 project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv()
 
 # Set environment variables from Vercel
 if os.getenv('VERCEL'):
