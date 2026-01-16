@@ -36,7 +36,14 @@ async def enrich_schools_async(schools_data: list, job_id: str):
     Enrich schools asynchronously and save to Supabase
     """
     try:
-        from api.database.supabase import SupabaseDB
+        # Import after path is set
+        try:
+            from api.database.supabase import SupabaseDB
+        except ImportError:
+            # Fallback: try direct import
+            import sys
+            sys.path.insert(0, str(Path(__file__).parent.parent))
+            from api.database.supabase import SupabaseDB
         
         db = SupabaseDB()
         engine = LeadEnrichmentEngine()
