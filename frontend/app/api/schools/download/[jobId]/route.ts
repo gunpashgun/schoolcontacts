@@ -3,11 +3,12 @@ import { getJob, supabase } from '@/lib/server/supabase';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { jobId: string } }
+  { params }: { params: Promise<{ jobId: string }> }
 ) {
   try {
+    const { jobId } = await params;
     const format = request.nextUrl.searchParams.get('format') || 'csv';
-    const job = await getJob(params.jobId);
+    const job = await getJob(jobId);
 
     if (!job || job.status !== 'completed') {
       return NextResponse.json(
@@ -20,12 +21,12 @@ export async function GET(
     const { data: schools } = await supabase
       .from('school_results')
       .select('*')
-      .eq('job_id', params.jobId);
+      .eq('job_id', jobId);
 
     const { data: personLeads } = await supabase
       .from('person_leads')
       .select('*')
-      .eq('job_id', params.jobId);
+      .eq('job_id', jobId);
 
     if (format === 'csv') {
       // Generate CSV
@@ -55,12 +56,12 @@ export async function GET(
       return new NextResponse(csv, {
         headers: {
           'Content-Type': 'text/csv',
-          'Content-Disposition': `attachment; filename="leads_${params.jobId}.csv"`,
+          'Content-Disposition': `attachment; filename="leads_${jobId}.csv"`,
         },
       });
     } else if (format === 'json') {
       return NextResponse.json({
-        job_id: params.jobId,
+        job_id: jobId,
         schools: schools || [],
         person_leads: personLeads || [],
       });

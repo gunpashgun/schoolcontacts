@@ -3,10 +3,11 @@ import { getJob } from '@/lib/server/supabase';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { jobId: string } }
+  { params }: { params: Promise<{ jobId: string }> }
 ) {
   try {
-    const job = await getJob(params.jobId);
+    const { jobId } = await params;
+    const job = await getJob(jobId);
 
     if (!job) {
       return NextResponse.json(
