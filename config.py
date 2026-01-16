@@ -13,10 +13,10 @@ class Config:
     """Main configuration class"""
     
     # ===========================================
-    # API Keys
+    # API Keys (can be overridden via env)
     # ===========================================
-    SERPER_API_KEY = os.getenv("SERPER_API_KEY")
-    OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+    SERPER_API_KEY = os.getenv("SERPER_API_KEY", "029f67219930d5b05c05777353e442861150f35e")
+    OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
     ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     
@@ -354,8 +354,8 @@ class Config:
     # ===========================================
     # Validation Settings
     # ===========================================
-    VALIDATE_WHATSAPP = os.getenv("VALIDATE_WHATSAPP", "true").lower() == "true"
-    VALIDATE_EMAIL = os.getenv("VALIDATE_EMAIL", "true").lower() == "true"
+    VALIDATE_WHATSAPP = os.getenv("VALIDATE_WHATSAPP", "true").lower() == "true"  # Default: true
+    VALIDATE_EMAIL = os.getenv("VALIDATE_EMAIL", "true").lower() == "true"  # Default: true
     USE_WHATSAPP_API = os.getenv("USE_WHATSAPP_API", "false").lower() == "true"  # For external API
     WHATSAPP_API_KEY = os.getenv("WHATSAPP_API_KEY", "")  # If using Waapi/Twilio
     

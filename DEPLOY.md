@@ -17,17 +17,8 @@ NEXT_PUBLIC_SUPABASE_URL=https://tzcdzyqhadczxsvvfdhg.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_mBHUGJABWYTE4PahfMcmSA_MOUETx-I
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6Y2R6eXFoYWRjenhzdnZmZGhnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODU4MzI0OCwiZXhwIjoyMDg0MTU5MjQ4fQ.9sLSEf4IdGz9rGLJe8eTxOFLG5vCsB2tL_XximDVDUk
 
-# API Keys
-SERPER_API_KEY=ваш_ключ
-OPENROUTER_API_KEY=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
-
-# LLM Settings
-LLM_PROVIDER=openrouter
-OPENROUTER_MODEL=anthropic/claude-3.5-sonnet
-
-# Validation
-VALIDATE_WHATSAPP=true
-VALIDATE_EMAIL=true
+# Остальные настройки (API ключи, LLM, валидация) захардкожены в config.py
+# При необходимости можно переопределить через переменные окружения
 ```
 
 ## Шаг 3: Деплой
