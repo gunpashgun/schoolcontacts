@@ -38,10 +38,17 @@ export async function POST(request: NextRequest) {
     // Create job in Supabase
     const jobId = await createJob(null, format, schools.length);
 
-    // Start background processing
-    // Import and call the enrichment service
+    // Start background processing via Python serverless function
     const { processSchoolsBackground } = await import('@/lib/server/enrichment');
-    processSchoolsBackground(jobId, schools).catch(console.error);
+    
+    // Don't await - let it run in background
+    processSchoolsBackground(jobId, schools).catch((error) => {
+      console.error('Background processing error:', error);
+      // Update job status to failed
+      import('@/lib/server/supabase').then(({ updateJobStatus }) => {
+        updateJobStatus(jobId, 'failed', error.message).catch(console.error);
+      });
+    });
 
     return NextResponse.json({
       job_id: jobId,
