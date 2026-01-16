@@ -3,10 +3,5 @@
   "outputDirectory": "frontend/.next",
   "installCommand": "cd frontend && npm install",
   "framework": "nextjs",
-  "rootDirectory": "frontend",
-  "functions": {
-    "../api/enrich.py": {
-      "runtime": "python3.9"
-    }
-  }
+  "rootDirectory": "frontend"
 }
