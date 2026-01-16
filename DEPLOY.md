@@ -3,7 +3,7 @@
 ## Шаг 1: Подключить репозиторий в Vercel
 
 1. Зайдите на https://vercel.com
-2. **Add New Project** → Импортируйте `gunpashgun/schoolcontacts`
+2. **Add New Project** → Импортируйте `AlgonovaTech/schoolcontacts`
 3. **Root Directory**: `frontend` ⚠️ ВАЖНО!
 4. **Framework Preset**: Next.js (автоматически)
 
