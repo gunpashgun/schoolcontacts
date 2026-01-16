@@ -15,10 +15,15 @@ class SupabaseDB:
     
     def __init__(self):
         supabase_url = os.getenv("SUPABASE_URL")
-        supabase_key = os.getenv("SUPABASE_KEY")
+        # Use service role key for backend (bypasses RLS)
+        # For frontend, use SUPABASE_ANON_KEY
+        supabase_key = os.getenv("SUPABASE_KEY") or os.getenv("SUPABASE_SERVICE_ROLE_KEY")
         
-        if not supabase_url or not supabase_key:
-            raise ValueError("SUPABASE_URL and SUPABASE_KEY must be set")
+        if not supabase_url:
+            raise ValueError("SUPABASE_URL must be set")
+        
+        if not supabase_key:
+            raise ValueError("SUPABASE_KEY or SUPABASE_SERVICE_ROLE_KEY must be set")
         
         self.client: Client = create_client(supabase_url, supabase_key)
     
