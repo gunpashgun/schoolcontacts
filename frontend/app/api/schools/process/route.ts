@@ -39,10 +39,9 @@ export async function POST(request: NextRequest) {
     const jobId = await createJob(null, format, schools.length);
 
     // Start background processing
-    // Note: In Vercel, we can't run long-running processes
-    // We'll need to use a queue system or call an external service
-    // For now, we'll trigger processing asynchronously
-    processSchoolsAsync(jobId, schools).catch(console.error);
+    // Import and call the enrichment service
+    const { processSchoolsBackground } = await import('@/lib/server/enrichment');
+    processSchoolsBackground(jobId, schools).catch(console.error);
 
     return NextResponse.json({
       job_id: jobId,
@@ -59,45 +58,3 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Async processing function
-async function processSchoolsAsync(jobId: string, schools: any[]) {
-  // Try to call Python backend if available
-  const pythonApiUrl = process.env.PYTHON_API_URL;
-  
-  if (pythonApiUrl) {
-    try {
-      const response = await fetch(`${pythonApiUrl}/api/schools/process`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          schools: schools.map(s => ({
-            name: s.name,
-            type: s.type,
-            location: s.location,
-            notes: s.notes
-          })),
-          format: 'json' 
-        }),
-      });
-
-      if (response.ok) {
-        // Python backend will handle the processing
-        return;
-      }
-    } catch (error) {
-      console.log('Python backend not available, using simplified processing');
-    }
-  }
-
-  // Simplified processing: just mark as completed
-  // In production, implement full enrichment or use a queue
-  const { updateJobStatus, updateJobProgress } = await import('@/lib/server/supabase');
-  
-  await updateJobStatus(jobId, 'processing');
-  
-  // Simulate processing
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  await updateJobProgress(jobId, schools.length, schools.length, 0);
-  await updateJobStatus(jobId, 'completed');
-}

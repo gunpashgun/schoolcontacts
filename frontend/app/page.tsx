@@ -5,7 +5,8 @@ import { InputForm } from "@/components/InputForm";
 import { ProcessingStatus } from "@/components/ProcessingStatus";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { getJobResults, downloadResults } from "@/lib/api";
+import { getJobResults } from "@/lib/api";
+import { DownloadButton } from "@/components/DownloadButton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
@@ -32,19 +33,6 @@ export default function Home() {
     }
   };
 
-  const handleDownload = async (format: string) => {
-    if (!jobId) return;
-    try {
-      const blob = await downloadResults(jobId, format);
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `leads_${jobId}.${format}`;
-      a.click();
-    } catch (error) {
-      console.error("Error downloading:", error);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-background p-8">
@@ -73,15 +61,12 @@ export default function Home() {
                   </CardDescription>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => handleDownload('csv')}>
+                  <DownloadButton jobId={jobId!} format="csv">
                     Download CSV
-                  </Button>
-                  <Button variant="outline" onClick={() => handleDownload('excel')}>
-                    Download Excel
-                  </Button>
-                  <Button variant="outline" onClick={() => handleDownload('json')}>
+                  </DownloadButton>
+                  <DownloadButton jobId={jobId!} format="json">
                     Download JSON
-                  </Button>
+                  </DownloadButton>
                 </div>
               </div>
             </CardHeader>
